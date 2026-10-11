@@ -62,7 +62,7 @@ def find_falling(hours):
     all_towns = post_batches(
         "/towns",
         [t["uuid"] for t in index],
-        {"name": True, "mayor": True, "nation": True, "residents": True,
+        {"name": True, "uuid": True, "mayor": True, "nation": True, "residents": True,
          "status": True, "stats": True},
     )
     ruined = {t["uuid"] for t in all_towns if (t.get("status") or {}).get("isRuined")}
@@ -112,7 +112,7 @@ def find_falling(hours):
     nations = post_batches(
         "/nations",
         [n["uuid"] for n in nindex],
-        {"name": True, "king": True, "towns": True, "stats": True},
+        {"name": True, "uuid": True, "king": True, "towns": True, "stats": True},
     )
     nation_results = []
     for n in nations:
