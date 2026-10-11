@@ -123,7 +123,15 @@ def find_falling(hours):
 
         names = {r["uuid"]: r["name"] for r in res}
         by_name = {r["name"]: r["uuid"] for r in res}
-        councillors = {by_name[n] for n in (t.get("ranks") or {}).get("Councillor", []) if n in by_name}
+        councillors = set()
+        for e in (t.get("ranks") or {}).get("Councillor", []):
+            # v4 may list councillors as objects ({name, uuid}) or plain names/uuids
+            if isinstance(e, dict):
+                u = e.get("uuid") or by_name.get(e.get("name"))
+            else:
+                u = by_name.get(e) or e
+            if u in names:
+                councillors.add(u)
         # who is still active when the mayor's time runs out
         active = [u for u, ts in known.items() if u != mayor_id and ts + inactive > mayor_at]
         active_c = [u for u in active if u in councillors]
@@ -373,4 +381,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-             
